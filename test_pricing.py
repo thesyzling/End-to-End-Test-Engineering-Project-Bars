@@ -28,4 +28,4 @@ def test_price_standard_hours():
 def test_price_evening_surge():
     #17.00 - 24.00 %10 surge
     #ex: Fitness
-    assert calculate_dynamic_price("Fitness, 18") == 88.0
+    assert calculate_dynamic_price("Fitness", 18) == 88.0
