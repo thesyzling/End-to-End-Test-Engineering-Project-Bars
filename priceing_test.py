@@ -11,3 +11,5 @@ def test_get_base_price_fitness():
 def test_get_base_price_invalid():
     # None for invalid Class
     assert get_base_price("Tekwando") is None
+
+# new push after adding actions
