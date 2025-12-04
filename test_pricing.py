@@ -1,5 +1,5 @@
 import pytest
-import priceing_engine import get_base_price
+from priceing_engine import get_base_price
 
 def test_get_base_price_yoga():
     # Yogo should be $200
