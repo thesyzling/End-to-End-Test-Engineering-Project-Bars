@@ -12,7 +12,7 @@ CAPACITY_LIMITS = {
     "Swimming": 30
 }
 
-def check_capacity(class_type, hour):
+def check_capacity(class_type,date, hour):
     """
     True -> reservation done
     False -> out of capacity
@@ -23,24 +23,26 @@ def check_capacity(class_type, hour):
     current_occupancy = sum(
         1 for r in RESERVATIONS_DB.values()
         if r["class_type"] == class_type 
+        and r["date"] == date
         and r["hour"] == hour 
         and r["status"] == "Active"
     )
     
     return current_occupancy < limit
 
-def create_reservation(member_id, class_type, hour):
+def create_reservation(member_id, class_type,date, hour):
     global RESERVATION_ID_COUNTER
     
     # 1- Capacity check
-    if not check_capacity(class_type, hour):
-        raise ValueError(f"Capacity full for {class_type} at {hour}:00")
+    if not check_capacity(class_type,date, hour):
+        raise ValueError(f"Capacity full for {class_type} on {date}  at {hour}:00")
 
     # 2 - make reservation
     reservation = {
         "id": RESERVATION_ID_COUNTER,
         "member_id": member_id,
         "class_type": class_type,
+        "date": date,
         "hour": hour,
         "status": "Active"
     }
