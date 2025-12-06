@@ -1,0 +1,36 @@
+# --- GÜVENLİK (Çok Önemli) ---
+.env
+.env.*
+*.key
+*.pem
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Sanal Ortamlar (Virtual Envs) ---
+venv/
+.venv/
+env/
+.env_bkp/
+
+# --- IDE Ayarları (VS Code, PyCharm vs) ---
+.vscode/
+.idea/
+*.swp
+
+# --- Test ve Coverage Raporları ---
+.coverage
+htmlcov/
+.pytest_cache/
+coverage.xml
+
+# --- İşletim Sistemi Dosyaları ---
+.DS_Store
+Thumbs.db
+
+# --- Veritabanı (Eğer local SQLite vs kalırsa diye) ---
+*.db
+*.sqlite3
+mongo_data/
