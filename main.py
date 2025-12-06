@@ -2,6 +2,8 @@
 from fastapi import FastAPI, HTTPException, status, Query
 from pydantic import BaseModel
 from typing import Optional
+from fastapi.staticfiles import StaticFiles  # <-- YENİ EKLENDİ
+from fastapi.responses import FileResponse   # <-- YENİ EKLENDİ
 
 # Engine dosyalarınızdan fonksiyonları çekiyoruz
 from pricing_engine import calculate_dynamic_price, calculate_refund, get_base_price
@@ -13,6 +15,7 @@ app = FastAPI(
     description="End-to-End Test Engineering Project API with MongoDB",
     version="2.0.0"
 )
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # --- PYDANTIC MODELLERİ (Veri Doğrulama) ---
 
@@ -33,6 +36,9 @@ class PriceResponse(BaseModel):
     currency: str = "USD"
 
 # --- 1. GENEL ENDPOINTLER (Tags: General) ---
+@app.get("/ui", include_in_schema=False)
+def read_ui():
+    return FileResponse('static/index.html')
 
 @app.get("/", tags=["General"])
 def read_root():

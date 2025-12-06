@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Center Rezervasyon</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
+        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 400px; }
+        h2 { text-align: center; color: #2c3e50; }
+        .tab { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 2px solid #eee; }
+        .tab button { background: none; border: none; padding: 10px; cursor: pointer; font-size: 16px; color: #7f8c8d; font-weight: bold; }
+        .tab button.active { color: #3498db; border-bottom: 2px solid #3498db; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #34495e; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button.action-btn { width: 100%; padding: 10px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; transition: background 0.3s; }
+        button.action-btn:hover { background-color: #2980b9; }
+        #message { margin-top: 15px; padding: 10px; border-radius: 5px; display: none; text-align: center; font-size: 14px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🏋️ Fitness Center</h2>
+    
+    <div class="tab">
+        <button class="active" onclick="showTab('register')">Kayıt Ol</button>
+        <button onclick="showTab('booking')">Rezervasyon</button>
+    </div>
+
+    <div id="register-section">
+        <div class="form-group">
+            <label>Ad Soyad</label>
+            <input type="text" id="regName" placeholder="Örn: Ali Veli">
+        </div>
+        <div class="form-group">
+            <label>Üyelik Tipi</label>
+            <select id="regType">
+                <option value="Yoga">Yoga</option>
+                <option value="Boxing">Boxing</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Tenis">Tenis</option>
+                <option value="Swimming">Swimming</option>
+            </select>
+        </div>
+        <button class="action-btn" onclick="registerMember()">Üye Ol</button>
+    </div>
+
+    <div id="booking-section" class="hidden">
+        <div class="form-group">
+            <label>Üye ID (Member ID)</label>
+            <input type="number" id="bookMemberId" placeholder="Kayıt sonrası verilen ID">
+        </div>
+        <div class="form-group">
+            <label>Ders Seçin</label>
+            <select id="bookClass">
+                <option value="Yoga">Yoga ($200)</option>
+                <option value="Boxing">Boxing ($120)</option>
+                <option value="Fitness">Fitness ($80)</option>
+                <option value="Basketball">Basketball ($40)</option>
+                <option value="Tenis">Tenis ($90)</option>
+                <option value="Swimming">Swimming ($30)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Tarih</label>
+            <input type="date" id="bookDate">
+        </div>
+        <div class="form-group">
+            <label>Saat (0-23)</label>
+            <input type="number" id="bookHour" min="6" max="23" placeholder="Örn: 14">
+        </div>
+        <button class="action-btn" style="background-color: #27ae60;" onclick="makeReservation()">Rezervasyon Yap</button>
+    </div>
+
+    <div id="message"></div>
+</div>
+
+<script>
+    const API_URL = "http://127.0.0.1:8000";
+
+    function showTab(tabName) {
+        document.getElementById('register-section').classList.add('hidden');
+        document.getElementById('booking-section').classList.add('hidden');
+        document.querySelector('.tab button:nth-child(1)').classList.remove('active');
+        document.querySelector('.tab button:nth-child(2)').classList.remove('active');
+
+        if(tabName === 'register') {
+            document.getElementById('register-section').classList.remove('hidden');
+            document.querySelector('.tab button:nth-child(1)').classList.add('active');
+        } else {
+            document.getElementById('booking-section').classList.remove('hidden');
+            document.querySelector('.tab button:nth-child(2)').classList.add('active');
+        }
+        hideMessage();
+    }
+
+    async function registerMember() {
+        const name = document.getElementById('regName').value;
+        const type = document.getElementById('regType').value;
+
+        try {
+            const response = await fetch(`${API_URL}/members`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, membership_type: type })
+            });
+            const data = await response.json();
+            
+            if (response.ok) {
+                showMessage(`✅ Kayıt Başarılı! Üye ID: <b>${data.member_id}</b> <br> (Bunu not edin!)`, 'success');
+                document.getElementById('bookMemberId').value = data.member_id; // Otomatik doldur
+            } else {
+                showMessage(`❌ Hata: ${data.detail}`, 'error');
+            }
+        } catch (error) {
+            showMessage(`❌ Bağlantı Hatası: ${error}`, 'error');
+        }
+    }
+
+    async function makeReservation() {
+        const memberId = document.getElementById('bookMemberId').value;
+        const classType = document.getElementById('bookClass').value;
+        const date = document.getElementById('bookDate').value;
+        const hour = document.getElementById('bookHour').value;
+
+        try {
+            const response = await fetch(`${API_URL}/reservations`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    member_id: parseInt(memberId), 
+                    class_type: classType, 
+                    date: date, 
+                    hour: parseInt(hour) 
+                })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage(`🎉 Rezervasyon Oluşturuldu! <br> Fiyat: <b>$${data.price}</b>`, 'success');
+            } else {
+                showMessage(`⚠️ Başarısız: ${data.detail}`, 'error');
+            }
+        } catch (error) {
+            showMessage(`❌ Bağlantı Hatası: ${error}`, 'error');
+        }
+    }
+
+    function showMessage(html, type) {
+        const msgDiv = document.getElementById('message');
+        msgDiv.style.display = 'block';
+        msgDiv.innerHTML = html;
+        msgDiv.className = type;
+    }
+
+    function hideMessage() {
+        document.getElementById('message').style.display = 'none';
+    }
+    
+    // Tarih alanına bugünü otomatik koy
+    document.getElementById('bookDate').valueAsDate = new Date();
+</script>
+
+</body>
+</html>
