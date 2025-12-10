@@ -1,0 +1,42 @@
+{
+  "info": {
+    "_postman_id": "052f0d25-a9aa-4aec-9b46-0666411d9fee",
+    "name": "test_engineering",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "New Request",
+      "id": "7777aaa2-b454-4d83-96a0-cc08f19e00b4",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/members",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "members"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "27f9ceec-fcef-4d46-a74c-d4af713645b6",
+      "key": "base_url",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
