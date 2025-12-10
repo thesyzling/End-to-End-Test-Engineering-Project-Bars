@@ -1,0 +1,67 @@
+{
+	"info": {
+		"_postman_id": "ef155071-3b69-4b82-be7c-08527cb672ba",
+		"name": "test_engineering",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49803714",
+		"_collection_link": "https://baris-keskinbs-7657843.postman.co/workspace/End-to-End-Test-Engineering-Pro~edb0ed6a-c2bf-4fdd-97a6-79ecaece3a44/collection/49803714-ef155071-3b69-4b82-be7c-08527cb672ba?action=share&source=collection_link&creator=49803714"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Test Ogrencisi\",\r\n  \"membership_type\": \"Yoga\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/members",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"members"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": ""
+		}
+	]
+}
