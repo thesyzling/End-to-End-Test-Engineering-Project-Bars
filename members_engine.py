@@ -1,13 +1,9 @@
-from database import get_db
-
+from database import members_collection
 VALID_MEMBERSHIP_TYPES = ["Yoga", "Boxing", "Fitness", "Basketball", "Tenis", "Swimming"]
 
 def create_member(member_id, name, membership_type):
     if membership_type not in VALID_MEMBERSHIP_TYPES:
         raise ValueError(f"Invalid membership type. Valid: {VALID_MEMBERSHIP_TYPES}")
-    
-    db = get_db()
-    members_collection = db["members"]
     
     member_data = {
         "_id": member_id, # Mongo ID olarak kullanıyoruz
@@ -20,5 +16,4 @@ def create_member(member_id, name, membership_type):
     return member_data
 
 def get_member(member_id):
-    db = get_db()
-    return db["members"].find_one({"_id": member_id})
+    return members_collection.find_one({"_id": member_id})

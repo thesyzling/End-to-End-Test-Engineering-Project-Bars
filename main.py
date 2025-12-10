@@ -106,6 +106,8 @@ def make_reservation(request: ReservationRequest):
     member = get_member(request.member_id)
     if not member:
         raise HTTPException(status_code=404, detail="Member not found. Please register first.")
+    
+    mem_type = member.get("type", "Standard")
 
     # 2. Ders tipi kontrolü
     if get_base_price(request.class_type) is None:
@@ -121,7 +123,7 @@ def make_reservation(request: ReservationRequest):
         )
         
         # 4. Fiyat Bilgisi Ekleme
-        price = calculate_dynamic_price(request.class_type, request.hour)
+        price = calculate_dynamic_price(request.class_type, request.hour, membership_type=mem_type)
         reservation["price"] = round(price, 2)
         
         # Mongo ID temizliği

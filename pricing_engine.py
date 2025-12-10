@@ -4,26 +4,37 @@ def get_base_price(class_type):
         "Boxing": 120,
         "Fitness": 80,
         "Basketball": 40,
-        "Tennis": 90, 
+        "Tenis": 90, 
         "Swimming": 30
     }
     return prices.get(class_type)
 
-def calculate_dynamic_price(class_type, hour):
+def calculate_dynamic_price(class_type, hour, membership_type="Standard"):
     base_price = get_base_price(class_type)
     
     if base_price is None:
         return None
     
+
+    mem_multipliers = {
+        "Student": 0.70,
+        "Standard": 1.00,
+        "Premium": 1.20
+    }
+    # for invalid types
+    m_multiplier = mem_multipliers.get(membership_type, 1.00)
     # Business Rules
     if 6 <= hour < 12:
-        return base_price * 0.80  # %20 discount
+        t_multiplier = 0.80  # %20 discount
     elif 12 <= hour < 17:
-        return base_price * 1.00  # Standard
+        t_multiplier = 1.00  # Standard
     elif 17 <= hour < 24:
-        return base_price * 1.10  # %10 surge
+        t_multiplier = 1.10 # %10 surge
     else:
-        return base_price
+        t_multiplier = 1.00
+
+    final_price = base_price * m_multiplier * t_multiplier
+    return round(final_price, 2)
     
 def calculate_refund(class_type, entrances):
     base_price = get_base_price(class_type)
@@ -42,12 +53,9 @@ def calculate_refund(class_type, entrances):
         "Boxing": 0.50,
         "Fitness": 0.10,
         "Basketball": 0.40,
-        "Tennis": 0.80,
+        "Tenis": 0.80,
         "Swimming": 0.15
     }
     
     # Take ratio
-    rate = refund_rates.get(class_type, 0)
-    
-    return base_price * rate
-    
+    return base_price * refund_rates.get(class_type, 0)
