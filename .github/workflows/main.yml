@@ -1,7 +1,5 @@
 name: CI Pipeline - Test Engineering Project
 
-# Bu pipeline ne zaman çalışacak?
-# Her 'push' işleminde ve her 'pull request'te çalışsın.
 on:
   push:
     branches: [ "main", "master" ]
@@ -10,27 +8,48 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest # Sanal bir Linux makinede çalışacak
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
 
     steps:
-    # 1. Adım: GitHub deposundaki kodları bu sanal makineye çek
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # 2. Adım: Python 3.10 kurulumu yap
     - name: Set up Python 3.10
       uses: actions/setup-python@v5
       with:
         python-version: "3.10"
 
-    # 3. Adım: Kütüphaneleri yükle (requirements.txt)
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    # 4. Adım: Unit Testleri Çalıştır (Coverage Raporu ile)
-    # [PDF Madde 5.2 & 5.3]
+    # 1. Aşama: Unit Testler (Pytest)
     - name: Run Tests with Pytest & Coverage
+      env:
+        MONGO_URL: "mongodb://localhost:27017"
       run: |
         pytest -v --cov=. --cov-report=term-missing
+
+    # 2. Aşama: API Testleri (Newman)
+    - name: Install Newman
+      run: npm install -g newman
+
+    - name: Run API Server in Background
+      env:
+        MONGO_URL: "mongodb://localhost:27017"
+      run: |
+        # Sunucuyu arka planda başlat
+        python -m uvicorn main:app --host 127.0.0.1 --port 8000 &
+        sleep 5 # Sunucunun açılması için bekle
+
+    - name: Run Postman Collection
+      run: |
+        # Dosya isminde boşluk olduğu için tırnak işareti kullanıyoruz
+        newman run "postman/collections/New Collection.postman_collection.json" --env-var base_url=http://127.0.0.1:8000
