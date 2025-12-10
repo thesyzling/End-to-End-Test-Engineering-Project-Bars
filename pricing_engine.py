@@ -24,7 +24,7 @@ def calculate_dynamic_price(class_type, hour, membership_type="Standard"):
     # for invalid types
     m_multiplier = mem_multipliers.get(membership_type, 1.00)
     # Business Rules
-    if 6 <= hour < 12:
+    if 6 <= hour <= 12:
         t_multiplier = 0.80  # %20 discount
     elif 12 <= hour < 17:
         t_multiplier = 1.00  # Standard
@@ -44,7 +44,7 @@ def calculate_refund(class_type, entrances):
         return 0
         
     
-    if entrances < 2:
+    if entrances > 2:
         return base_price 
     
     # Refund amounts
