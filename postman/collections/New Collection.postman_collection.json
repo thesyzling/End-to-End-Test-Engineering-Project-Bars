@@ -12,11 +12,16 @@
           "name": "Add Request",
           "event": [
             {
-              "listen": "prerequest",
+              "listen": "test",
               "script": {
-                "id": "17d59379-fb79-4ae8-ad73-f21fa0b900db",
+                "id": "57db5fdf-5239-4a43-8118-9c7d76e538b1",
                 "exec": [
-                  ""
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "// İleride rezervasyon yaparken kullanmak için ID'yi kaydedelim",
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"member_id_boxing\", jsonData.member_id);"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -24,16 +29,11 @@
               }
             },
             {
-              "listen": "test",
+              "listen": "prerequest",
               "script": {
-                "id": "48a82a24-a5fd-43e7-9980-66ca17186a21",
+                "id": "1b16719b-4493-4855-ba19-18f180395f7d",
                 "exec": [
-                  "pm.test(\"Status code is 201\", function () {\r",
-                  "    pm.response.to.have.status(201);\r",
-                  "});\r",
-                  "// Dönen ID'yi sonraki testlerde kullanmak için değişkene atıyoruz\r",
-                  "var jsonData = pm.response.json();\r",
-                  "pm.environment.set(\"member_id_yoga\", jsonData.member_id);"
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -44,7 +44,12 @@
           "id": "93097f38-f0eb-4a62-b723-0e5c736f75cc",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "",
