@@ -37,11 +37,11 @@ refund_scenarios = [
 
     # --- TENIS (Base Price: 90) ---
     # Rule:if entry < 2 then refund %100, if >=  %80 refund
-    ("Tenis", 0, 90.0),
-    ("Tenis", 1, 90.0),
-    ("Tenis", 2, 72.0),   # 90 * 0.80 = 72
-    ("Tenis", 3, 72.0),
-    ("Tenis", 7, 72.0),
+    ("Tennis", 0, 90.0),
+    ("Tennis", 1, 90.0),
+    ("Tennis", 2, 72.0),   # 90 * 0.80 = 72
+    ("Tennis", 3, 72.0),
+    ("Tennis", 7, 72.0),
 
     # --- SWIMMING (Base Price: 30) ---
     # Rule:if entry < 2 then refund %100, if >=  %15 refund
